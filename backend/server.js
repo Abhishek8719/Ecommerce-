@@ -9,14 +9,20 @@ import User from "./models/User.js"
 const app = express();
 const JWT_SECRET = "secret123";
 
-app.use(
-    cors({
-        origin :"http://localhost:5173"
-    })
-)
+// app.use(
+//     cors({
+//         origin: "http://localhost:5175",
+//         credentials: true, 
+//         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//         allowedHeaders: ["Content-Type", "Authorization"]
+//     })
+// );
+
+// app.options('*', cors()); 
+app.use(cors());
 app.use(express.json());
 
-
+// we establish the connnectio between bckend and database 
 mongoose.connect("mongodb://127.0.0.1:27017/amazonClone")
 .then(()=> console.log("MongoDb connected......"))
 .catch((err)=> console.error(err));
@@ -27,25 +33,25 @@ app.get("/",(req,res)=>{
 })
 
 
-app.post("/api/products/seed",async (req,res)=>{
-    try{
+// app.post("/api/products/seed",async (req,res)=>{
+//     try{
 
 
-        const productData = [
-            {"name":"Laptop","price":23000},
-            {"name":"Phone","price":34000},
-            {"name":"iPhone","price":110000},
-            {"name":"LCD","price":80000},
-            {"name":"Smart Watch","price":20000}
-         ]        
+//         const productData = [
+//             {"name":"Laptop","price":23000},
+//             {"name":"Phone","price":34000},
+//             {"name":"iPhone","price":110000},
+//             {"name":"LCD","price":80000},
+//             {"name":"Smart Watch","price":20000}
+//          ]        
 
-         await Product.insertMany(productData);
-         res.json({message:"Products seeded successfully"})
-    } catch(err){
-       res.status(500).json({message:"Error seeding data", error: err.message});
-    }
+//          await Product.insertMany(productData);
+//          res.json({message:"Products seeded successfully"})
+//     } catch(err){
+//        res.status(500).json({message:"Error seeding data", error: err.message});
+//     }
 
-})
+// })
 
 app.get("/api/products",async (req,res)=>{
     try{
@@ -110,12 +116,12 @@ app.post("/api/auth/login",async (req,res)=>{
         res.json({token ,user:{id:user._id,name:user.name,email:user.email}})
         console.log(token);
 
-    }catch(err){
+    } catch(err){
         res.status(500).json({message:"Login error"})
     }
 })
-const PORT = process.env.PORT || 5000;
-app.listen(PORT,()=>{
-    console.log(`Backend server running on the http://localhost:${PORT}`);
+       const PORT = process.env.PORT || 5000;
+       app.listen(PORT,()=>{
+        console.log(`Backend server running on the http://localhost:${PORT}`);
     
 });
